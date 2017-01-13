@@ -2,54 +2,131 @@ package Provider;
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.*;
 
-public class Server{
-	ServerSocket providerSocket;
-	Socket connection = null;
+import clientSide.theAccounts;
+
+public class server{
+	ServerSocket mySocket;
+	Socket mycon = null;
 
 	ObjectOutputStream out;
 	ObjectInputStream in;
 	Scanner input;
+	String message;
+	String user_input;
 	String name;
 	String address;
-	int bankAccNcm;
-	String password;
+	int bankAccNum;
 	String userName;
+	String password;
+	int balance = 1000;
+	int choice;
+	int withdraw;
 	
+	ArrayList<theAccounts> acc = new ArrayList<theAccounts>();
 	
-	Server()
+	Scanner Scan = new Scanner(System.in);
+	
+	server()
 	{
 		input = new Scanner(System.in);
 	}
 	void listener()
 	{
 		try{
-			//1. creating a server socket
-			providerSocket = new ServerSocket(2010, 10);
-			//2. Wait for connection
+			mySocket = new ServerSocket(2017, 10);
 			System.out.println("Waiting for connection");
 			
-			connection = providerSocket.accept();
+			mycon = mySocket.accept();
 			
-			System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-			//3. get Input and Output streams
-			out = new ObjectOutputStream(connection.getOutputStream());
+			System.out.println("Connection received from " + mycon.getInetAddress().getHostName());
+			out = new ObjectOutputStream(mycon.getOutputStream());
 			out.flush();
-			in = new ObjectInputStream(connection.getInputStream());
+			in = new ObjectInputStream(mycon.getInputStream());
 			
-			//4. The two parts communicate via the input and output streams
-			
+			do{
+				try{
+					System.out.println("1 for register");
+					System.out.println("2 for log in");
+					System.out.println("3 for withdrawel");
+					System.out.print("Please select option");
+					choice = Scan.nextInt();
+					
+					if(choice == 1 ){
+					
+					sendMessage("Please Enter Name ");
+					message = (String)in.readObject();
+					name = new String(message);
+					
+					sendMessage("Please Enter Address");
+					message = (String)in.readObject();
+					address = new String(message);
+					
+					sendMessage("Please enter bank Account Number");
+					message = (String)in.readObject();
+					bankAccNum = new Integer(message);
+					
+					sendMessage("Please enter username");
+					message = (String)in.readObject();
+					userName = new String (message);
+					
+					sendMessage("Please enter password");
+					message = (String)in.readObject();
+					password = new String (message);
+					
+					sendMessage("you are registered");
+					
+					message=(String)in.readObject();
+					}
+					else if (choice == 2){
+						sendMessage("Please Enter Username ");
+						message = (String)in.readObject();
+						name = new String(message);
+						
+						sendMessage("Please Enter password");
+						message = (String)in.readObject();
+						address = new String(message);
+						
+						
+						sendMessage("you are logged in");
+						
+						message=(String)in.readObject();
+						
+						
+					}
+					else if(choice == 3){
+						
+						System.out.println("How much would you like to withdraw?");
+						withdraw = Scan.nextInt();
+						balance -= withdraw;
+						
+						sendMessage("your balance is " + balance);
+						
+						if (withdraw > balance){
+							sendMessage("withdrawl too high you cannot do that");
+							
+						}
+						
+						message=(String)in.readObject();
+					}
+					
+					
+				}
+				catch(ClassNotFoundException classnot){
+					System.err.println("Data received in unknown format");
+				}
+			}while(!message.equals("Thank You!"));
 		}
 		catch(IOException ioException){
 			ioException.printStackTrace();
 		}
 		finally{
-			//4: Closing connection
+
 			try{
 				in.close();
 				out.close();
-				providerSocket.close();
+				mySocket.close();
 			}
 			catch(IOException ioException){
 				ioException.printStackTrace();
@@ -69,10 +146,10 @@ public class Server{
 	}
 	public static void main(String args[])
 	{
-		Server ser = new Server();
+		server server = new server();
 		while(true)
 		{
-			ser.listener();
+			server.listener();
 		}
 	}
 }

@@ -1,15 +1,22 @@
 package clientSide;
 
-public class Account {
+public class theAccounts {
 	String name;
 	String address;
 	int bankAccNum;
 	String userName;
 	String password;
 
-	public Account() {
+	public theAccounts() {
 		super();
 	}
+	
+	@Override
+	public String toString() {
+		return "theAccounts [name=" + name + ", address=" + address + ", bankAccNum=" + bankAccNum + ", userName="
+				+ userName + ", password=" + password + "]";
+	}
+
 
 	public String getName() {
 		return name;

@@ -16,15 +16,15 @@ public class clientConnection{
 	void run()
 	{
 		try{
-			//1. creating a socket to connect to the server
+
 			
-			requestSocket = new Socket("127.0.0.1", 2010);
-			System.out.println("Connected to localhost in port 2004");
-			//2. get Input and Output streams
+			requestSocket = new Socket("127.0.0.1", 2017);
+			System.out.println("Connected to localhost in port 2017");
+
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			out.flush();
 			in = new ObjectInputStream(requestSocket.getInputStream());
-			//3: Communicating with the server
+
 			do{
 				try{
 					message = (String)in.readObject();
@@ -41,11 +41,17 @@ public class clientConnection{
 					System.out.println(message);
 					message = user_input.next();
 					sendMessage(message);
-			
-					message = (String)in.readObject();
-					System.out.println("Result: "+message);
 					
-					System.out.println("Would you like to do another calulation.... Enter Yes or No");
+					message = (String)in.readObject();
+					System.out.println(message);
+					message = user_input.next();
+					sendMessage(message);
+					
+					message = (String)in.readObject();
+					System.out.println(message);
+					message = user_input.next();
+					sendMessage(message);
+					
 					
 					message = user_input.next();
 					if(message.compareTo("No")==0)
@@ -75,7 +81,7 @@ public class clientConnection{
 			ioException.printStackTrace();
 		}
 		finally{
-			//4: Closing connection
+
 			try{
 				in.close();
 				out.close();
