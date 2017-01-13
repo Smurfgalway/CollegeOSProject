@@ -20,10 +20,10 @@ public class server{
 	int bankAccNum;
 	String userName;
 	String password;
-	int balance = 1000;
+	float balance = 1000;
 	int choice;
-	int withdraw;
-	
+	float withdraw;
+	float lodge;
 	ArrayList<theAccounts> acc = new ArrayList<theAccounts>();
 	
 	Scanner Scan = new Scanner(System.in);
@@ -47,9 +47,14 @@ public class server{
 			
 			do{
 				try{
+					boolean con = true;
+					while (con == true){
 					System.out.println("1 for register");
 					System.out.println("2 for log in");
-					System.out.println("3 for withdrawel");
+					System.out.println("3 for withdrawl");
+					System.out.println("4 for Lodgement");
+					System.out.println("5 for past transactions");
+					System.out.println("6 to quit the program");
 					System.out.print("Please select option");
 					choice = Scan.nextInt();
 					
@@ -98,21 +103,42 @@ public class server{
 					else if(choice == 3){
 						
 						System.out.println("How much would you like to withdraw?");
-						withdraw = Scan.nextInt();
+						withdraw = Scan.nextFloat();
 						balance -= withdraw;
 						
-						sendMessage("your balance is " + balance);
 						
 						if (withdraw > balance){
 							sendMessage("withdrawl too high you cannot do that");
 							
+							
+						}else {
+							sendMessage("your balance is " + balance);
 						}
 						
 						message=(String)in.readObject();
 					}
+					else if(choice == 4){
+						
+						System.out.println("How much would you like to lodgement?");
+						lodge = Scan.nextFloat();
+						balance += lodge;
+						
+						sendMessage("your balance is " + balance);
+						
+						message=(String)in.readObject();
 					
+					}
+					else if (choice == 5){
+						sendMessage("error withdraw history not found");
+					}
+					else if (choice == 6){
+						sendMessage("you have quited the program");
+						message=(String)in.readObject();
+						con = false;
+					}
 					
-				}
+					}//while
+				}//try
 				catch(ClassNotFoundException classnot){
 					System.err.println("Data received in unknown format");
 				}
